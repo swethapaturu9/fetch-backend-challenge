@@ -5,7 +5,7 @@ import (
 	"io"
 	"net/http"
 	"github.com/go-playground/validator/v10"
-	
+	"github.com/gorilla/mux"
 )
 
 var (
@@ -43,6 +43,10 @@ func ProcessReceiptsHandler(w http.ResponseWriter, r *http.Request) {
 
 	id := generateUniqueID()
 
+	points := CalculatePoints(receipt)
+
+	pointsMap[id] = points
+
 	response := ProcessResponse{
 		ID: id,
 	}
@@ -52,4 +56,28 @@ func ProcessReceiptsHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 
+}
+
+type PointsResponse struct {
+	Points int `json:"points"`
+}
+
+func GetPointsHandler(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	id := vars["id"]
+
+	points, exists := pointsMap[id]
+	if !exists {
+		http.Error(w, "ID not found", http.StatusNotFound)
+		return
+	}
+
+	response := PointsResponse{
+		Points: points,
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	if err := json.NewEncoder(w).Encode(response); err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
 }

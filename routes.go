@@ -11,6 +11,6 @@ func RegisterRoutes() {
 	r := mux.NewRouter()
 
 	r.HandleFunc("/receipts/process", ProcessReceiptsHandler).Methods("POST")
-
+	r.HandleFunc("/receipts/{id}/points", GetPointsHandler).Methods("GET")
 	http.Handle("/", r)
 }

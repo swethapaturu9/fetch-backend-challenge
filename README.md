@@ -64,9 +64,9 @@ All implementations exist within the main package:
    ```sh
    git clone https://github.com/swethapaturu9/fetch-backend-challenge.git
    ```
-   2. Navigate to the root directory
+   2. Navigate to the root directory and then main package
    ```sh
-   cd fetch-backend-challenge
+   cd fetch-backend-challenge/main
    ```
    3. Run the command
    ```sh
@@ -76,5 +76,3 @@ All implementations exist within the main package:
   ```sh
   go test -v   
    ```
-
-

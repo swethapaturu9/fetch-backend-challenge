@@ -96,6 +96,8 @@ type OddDayPointsCalculator struct{}
 func (o *OddDayPointsCalculator) CalculatePoints(receipt Receipt) int {
 	date, _ := time.Parse("2006-01-02", receipt.PurchaseDate)
 
+	fmt.Println(date.Day())
+
 	if date.Day()%2 != 0 {
 		return 6
 	}
@@ -127,6 +129,7 @@ func CalculatePoints(receipt Receipt) int {
 	points := 0
 
 	for _, calculator := range calculators {
+
 		points += calculator.CalculatePoints(receipt)
 	}
 

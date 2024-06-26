@@ -37,7 +37,7 @@ func ProcessReceiptsHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if err := validate.Struct(receipt); err != nil {
-		http.Error(w, "Validation error: "+err.Error(), http.StatusBadRequest)
+		http.Error(w, "The receipt is invalid", http.StatusBadRequest)
 		return
 	}
 
@@ -53,7 +53,7 @@ func ProcessReceiptsHandler(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 	if err := json.NewEncoder(w).Encode(response); err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		http.Error(w, "The receipt is invalid", http.StatusInternalServerError)
 	}
 
 }
@@ -63,12 +63,18 @@ type PointsResponse struct {
 }
 
 func GetPointsHandler(w http.ResponseWriter, r *http.Request) {
+
+	if r.ContentLength > 0 {
+        http.Error(w, "Payload not allowed", http.StatusBadRequest)
+        return
+    }
+
 	vars := mux.Vars(r)
 	id := vars["id"]
 
 	points, exists := pointsMap[id]
 	if !exists {
-		http.Error(w, "ID not found", http.StatusNotFound)
+		http.Error(w, "No receipt found for that id", http.StatusNotFound)
 		return
 	}
 
